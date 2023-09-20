@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { FaPlus, FaTh, FaThList, IconName } from "react-icons/fa";
-import { IconContext } from "react-icons";
+import { Link } from "react-router-dom";
+import { FaPlus, FaTh, FaThList } from "react-icons/fa";
 import axios from "axios";
 import Card from "../../components/Card";
 import List from "../../components/List";
@@ -28,19 +27,28 @@ function ListArticle() {
   useEffect(() => {
     getArticles();
   }, []);
+
   return (
     <>
       <div className="row my-3">
         <div className="col-md-6">
-          <h1>List of article</h1>
+          <h1 style={{ color: "#84A0BA" }}>List of article</h1>
         </div>
         <div className="col-md-6 text-end">
+          <Link to="/blog/add">
+            <button className="btn btn-primary">
+              <FaPlus />
+              <span className="ms-2">Add</span>
+            </button>
+          </Link>
+        </div>
+        {/* <div className="col-md-6 text-end">
           <Link to="/blog/add">
             <IconContext.Provider value={{ color: " #84A0BA" }}>
               <FaPlus /> Add
             </IconContext.Provider>
           </Link>
-        </div>
+        </div> */}
       </div>
       <div className="row my-3">
         <div className="col-md-12">
