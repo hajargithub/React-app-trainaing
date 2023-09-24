@@ -27,6 +27,7 @@ function EditArticle() {
       title: "",
       body: "",
       image: "",
+      active: "true",
     },
     onSubmit: update,
   });
@@ -34,6 +35,8 @@ function EditArticle() {
   const getArticleById = async (id) => {
     try {
       const { data } = await axios.get(`http://localhost:3001/articles/${id}`);
+      // console.log("data", data);
+      // console.log("values", formik.values);
       formik.setValues({
         ...formik.values,
         ...data,

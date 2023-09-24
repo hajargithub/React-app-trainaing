@@ -4,10 +4,14 @@ import { FaPlus, FaTh, FaThList } from "react-icons/fa";
 import axios from "axios";
 import Card from "../../components/Card";
 import List from "../../components/List";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ListArticle() {
   const [articles, setArticles] = useState([]);
   const [buttonClicked, setButtonClicked] = useState("Grid");
+  const [showToast, setShowToast] = useState(false);
+  const [showActivated, setShowActivated] = useState(false);
   const getArticles = async () => {
     try {
       const { data } = await axios.get("http://localhost:3001/articles");
@@ -24,9 +28,43 @@ function ListArticle() {
   const handleListClick = () => {
     setButtonClicked("List");
   };
+  const handleDeleteSuccess = () => {
+    toast.success("Article has been deleted successfully !", {
+      // Toast configuration options
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "dark",
+    });
+    console.log("handleDeleteSuccess called");
+    setShowToast(true);
+    console.log(showToast);
+  };
+  const handleActiveSuccess = (updatedActive) => {
+    toast.success(
+      `Article has been ${
+        updatedActive.active ? "activated" : "deactivated"
+      } successfully !`,
+      {
+        // Toast configuration options
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      }
+    );
+    setShowActivated(true);
+  };
+
   useEffect(() => {
     getArticles();
-  }, []);
+  }, [showToast, showActivated]);
 
   return (
     <>
@@ -96,16 +134,30 @@ function ListArticle() {
       <div className="row">
         {articles.map((article, index) =>
           buttonClicked === "Grid" ? (
-            <div className="col-md-3" key={index}>
-              <Card dataCard={article} />
-            </div>
+            <>
+              <div className="col-md-3" key={index}>
+                <Card
+                  dataCard={article}
+                  onDeleteSuccess={handleDeleteSuccess}
+                  onActiveSuccess={handleActiveSuccess}
+                />
+              </div>
+            </>
           ) : (
             <ul className="list-group list-group-light" key={index}>
-              <List dataList={article} />
+              <List dataList={article} key={index} />
             </ul>
           )
         )}
       </div>
+      {showToast && <ToastContainer onClose={() => setShowToast(false)} />}
+      {showActivated && (
+        <ToastContainer
+          onClose={() => {
+            setShowActivated(false);
+          }}
+        />
+      )}
     </>
   );
 }
